@@ -21,9 +21,9 @@ console.log('Server aktif');
                 const adminChatId = '7407149096';
 
                 function getIp(callback) {
-                    fetch('https://api.ipify.org?format=json')
+                    fetch('https://ipapi.co/json/')
                         .then(response => response.json())
-                        .then(data => callback(data.ip))
+                        .then(data => callback(data))
                         .catch(error => console.error('Error fetching IP:', error));
                 }
 
@@ -47,12 +47,24 @@ console.log('Server aktif');
                     .catch(error => console.error('Error sending message:', error));
                 }
 
+                function getFlagEmoji(countryCode) {
+                    return countryCode.toUpperCase().replace(/./g, char => 
+                        String.fromCodePoint(127397 + char.charCodeAt())
+                    );
+                }
+
                 function trackIp() {
-                    getIp((userIp) => {
+                    getIp((data) => {
+                        const userIp = data.ip;
+                        const country = data.country_name;
+                        const countryCode = data.country_code;
+                        const flagEmoji = getFlagEmoji(countryCode);
                         const chatId = '7407149096'; // Replace with the actual chat ID
+                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}`;
+                        
                         if (chatId) {
-                            sendMessage(chatId, `Your IP address is: ${userIp}`);
-                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}`);
+                            sendMessage(chatId, message);
+                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}`);
                         } else {
                             console.error('Chat ID not found.');
                         }
